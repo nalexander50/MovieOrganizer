@@ -119,15 +119,15 @@ def find_proper_video(folder_path):
     return video_file_matches
 
 def rename_proper_video(folder_path, video_path, modify=False):
-    new_name = os.path.basename(folder_path)
-    _, current_extension = os.path.splitext(video_path)
+    new_name, new_extension = os.path.splitext(os.path.basename(folder_path))
+    current_name, current_extension = os.path.splitext(os.path.basename(video_path))
     new_video_path = os.path.join(folder_path, f'{new_name}{current_extension}')
 
     if modify:
         os.rename(video_path, new_video_path)
-        return (new_video_path, f'[RENAMED] {video_path} to {new_video_path}')
+        return (new_video_path, f'[RENAMED] {current_name}{current_extension} to {new_name}{current_extension}')
     else:
-        return (new_video_path, f'Rename {video_path} to {new_video_path}')
+        return (new_video_path, f'Rename {current_name}{current_extension} to {new_name}{current_extension}')
 
 def convert_proper_video(folder_path, video_path, operation, modify=False):
     current_name, current_extension = os.path.splitext(os.path.basename(video_path))
@@ -153,14 +153,15 @@ def delete_excess_files(folder_path, proper_video_path, modify=False):
     for dir_entry in os.listdir(folder_path):
         dir_entry_path = os.path.join(folder_path, dir_entry)
         if dir_entry_path != proper_video_path:
+            current_name, current_extension = os.path.splitext(os.path.basename(dir_entry_path))
             if modify:
                 if os.path.isdir(dir_entry_path):
                     shutil.rmtree(dir_entry_path)
                 else:
                     os.remove(dir_entry_path)
-                messages.append(f'[DELETED] {dir_entry_path}')
+                messages.append(f'[DELETED] {current_name}{current_extension}')
             else:
-                messages.append(f'Delete {dir_entry_path}')
+                messages.append(f'Delete {current_name}{current_extension}')
     return messages
 
 if __name__ == '__main__':
