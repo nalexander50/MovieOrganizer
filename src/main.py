@@ -38,7 +38,7 @@ def main():
 
     if contains_many:
         proc_count = 0
-        listed_dir = sorted(os.listdir(folder_path))
+        listed_dir = sorted([f for f in os.listdir(folder_path) if not f.startswith('.')])
         for dir_entry in listed_dir:
             dir_entry_path = os.path.join(folder_path, dir_entry)
             if os.path.isdir(dir_entry_path):
