@@ -62,7 +62,8 @@ def main():
         print('\n')
         print(f'{len(requires_manual_intervention)} folders require manual intervention')
         for path, error in requires_manual_intervention.items():
-            print(f'\t{path}')
+            current_name, current_extension = os.path.splitext(os.path.basename(path))
+            print(f'\t{current_name}{current_extension}')
             print(f'\t\t{error}')
     
     print('Done')
@@ -96,6 +97,7 @@ def process_folder(folder_path, operation, modify=False):
 def check_proper_folder_name(folder_path):
     folder_name = os.path.basename(folder_path)
     is_proper = re.match(r'^.+ \(\d\d\d\d\)$', folder_name) != None
+    is_proper = not '.' in folder_path
     return is_proper
 
 def extract_year(folder_path):
@@ -132,7 +134,7 @@ def rename_proper_video(folder_path, video_path, modify=False):
 def convert_proper_video(folder_path, video_path, operation, modify=False):
     current_name, current_extension = os.path.splitext(os.path.basename(video_path))
     if current_extension == PREFERRED_VIDEO_EXTENSION:
-        return (video_path, f'{video_path} already encoded as {PREFERRED_VIDEO_EXTENSION}')
+        return (video_path, f'{current_name}{current_extension} already encoded as {PREFERRED_VIDEO_EXTENSION}')
     new_video_path = os.path.join(folder_path, f'{current_name}{PREFERRED_VIDEO_EXTENSION}')
 
     if operation == Operations.TRANSCODE:
